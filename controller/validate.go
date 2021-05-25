@@ -17,11 +17,11 @@ func Validate(ar *admissionv1.AdmissionReview) *admissionv1.AdmissionResponse {
 		message = ""
 	)
 
-	klog.Infof("AdmissionReview for Kind=%s, Namespace=%s Name=%s UID=%s", req.Kind.Kind, req.Namespace, req.Name, req.UID)
+	klog.Infof("[webhook] AdmissionReview for Kind=%s, Namespace=%s Name=%s UID=%s", req.Kind.Kind, req.Namespace, req.Name, req.UID)
 
-	var pod corev1.Pod
-	if err := json.Unmarshal(req.Object.Raw, &pod); err != nil {
-		klog.Errorf("Can't unmarshal object raw: %v", err)
+	var dep corev1.Deployment
+	if err := json.Unmarshal(req.Object.Raw, &dep); err != nil {
+		klog.Errorf("[webhook] 无法解析AdmissionReview object raw: %v", err)
 		allowed = false
 		code = http.StatusBadRequest
 		return &admissionv1.AdmissionResponse{
@@ -34,8 +34,9 @@ func Validate(ar *admissionv1.AdmissionReview) *admissionv1.AdmissionResponse {
 	}
 
 	// 处理真正的业务逻辑
-	klog.Infof("%v", pod.Spec.Containers)
+	klog.Infof("[webhook] pod 相关信息: %v", dep)
 
+	// 返回具体的admissionresponse
 	return &admissionv1.AdmissionResponse{
 		Allowed: allowed,
 		Result: &metav1.Status{

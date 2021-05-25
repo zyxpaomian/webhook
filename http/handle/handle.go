@@ -2,7 +2,6 @@ package handle
 
 import (
 	"webhook/http"
-	//go_http "net/http"
 )
 
 func InitHandle(r *http.WWWMux) {

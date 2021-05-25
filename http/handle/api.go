@@ -14,29 +14,30 @@ import (
 	"fmt"
 )
 
-
 var (
 	runtimeScheme = runtime.NewScheme()
 	codeFactory   = serializer.NewCodecFactory(runtimeScheme)
 	deserializer  = codeFactory.UniversalDeserializer()
 )
 
-// 只做拦截，不做修改
+// valiDateAdmission类型的拦截器，只做拦截，不做修改
 func valiDateAdmission(res http.ResponseWriter, req *http.Request) {
+	// 解析收到的报文
 	reqContent, err := ioutil.ReadAll(req.Body)
 	defer req.Body.Close()
 	if err != nil {
-		klog.Errorf("[http] 请求报文解析失败")
+		klog.Errorf("[webhook] 请求报文解析失败")
 		common.ReqBodyInvalid(res)
 		return
 	}
 
+	// 定义resp的报文
 	var admissionResponse *admissionv1.AdmissionResponse
 	requestedAdmissionReview := admissionv1.AdmissionReview{}
 	// 对api-server传过来的报文做解析
 	_, _, err = deserializer.Decode(reqContent, nil, &requestedAdmissionReview)
 	if err != nil {
-		klog.Errorf("Can't decode body: %v", err)
+		klog.Errorf("[webhook] 请求报文解析失败: %v", err)
 		admissionResponse = &admissionv1.AdmissionResponse{
 			Result: &metav1.Status{
 				Code:    http.StatusInternalServerError,
@@ -60,20 +61,18 @@ func valiDateAdmission(res http.ResponseWriter, req *http.Request) {
 		}
 	}
 
-	klog.Info(fmt.Sprintf("sending response: %v", responseAdmissionReview.Response))
+	klog.Infof("[webhook] 回调api-server, 发送报文: %v",responseAdmissionReview.Response)
 	// send response
 	respBytes, err := json.Marshal(responseAdmissionReview)
 	if err != nil {
-		klog.Errorf("Can't encode response: %v", err)
-		common.ResMsg(res, 500, err.Error())
+		klog.Errorf("[webhook] 无法解析回调报文: %v", err)
+		http.Error(res, fmt.Sprintf("Can't write reponse: %v", err), http.StatusBadRequest)
 		return
 	}
-	klog.Info("Ready to write response...")
+	klog.Info("[webhook] 准备发送回包")
 
 	if _, err := res.Write(respBytes); err != nil {
-		klog.Errorf("Can't write response: %v", err)
+		klog.Errorf("[webhook] 无法发送回调报文: %v", err)
 		http.Error(res, fmt.Sprintf("Can't write reponse: %v", err), http.StatusBadRequest)
-		// return
-		// http.Error(res, fmt.Sprintf("Can't write reponse: %v", err), http.StatusBadRequest)
 	}
 }

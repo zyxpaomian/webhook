@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"reflect"
 	"runtime"
-	//"webhook/common"
 )
 
 type WWWMux struct {
@@ -24,14 +23,14 @@ func (m *WWWMux) GetRouter() *mux.Router {
 // 记录日志
 func AccessLogHandler(h func(http.ResponseWriter, *http.Request)) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		klog.Infof("[http] %s - %s", r.Method, r.RequestURI)
+		klog.Infof("[webhook] %s - %s", r.Method, r.RequestURI)
 		h(w, r)
 	}
 }
 
 // 注册URL映射
 func (m *WWWMux) RegistURLMapping(path string, method string, handle func(http.ResponseWriter, *http.Request)) {
-	klog.Infof("[http] URL注册映射, path: %v, method: %v, handle: %v", path, method, runtime.FuncForPC(reflect.ValueOf(handle).Pointer()).Name())
+	klog.Infof("[webhook] URL注册映射, path: %v, method: %v, handle: %v", path, method, runtime.FuncForPC(reflect.ValueOf(handle).Pointer()).Name())
 	handle = AccessLogHandler(handle)
 	m.r.HandleFunc(path, handle).Methods(method)
 }

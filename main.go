@@ -30,7 +30,7 @@ func main() {
 
 	cert, err := tls.LoadX509KeyPair(certFile, keyFile)
 	if err != nil {
-		klog.Errorf("Failed to load key pair: %v", err)
+		klog.Errorf("[webhook] 加载证书失败: %v", err)
 		return
 	}
 	// 启动HTTP服务
@@ -46,8 +46,7 @@ func main() {
 		ReadTimeout:  15 * time.Hour,
 	}
 	go srv.ListenAndServeTLS("", "")
-	//go srv.ListenAndServe()
-
+	
 	// 等待
 	select {}
 }
