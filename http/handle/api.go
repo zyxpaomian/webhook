@@ -72,10 +72,8 @@ func valiDateAdmission(res http.ResponseWriter, req *http.Request) {
 
 	if _, err := res.Write(respBytes); err != nil {
 		klog.Errorf("Can't write response: %v", err)
-		common.ResMsg(res, 500, err.Error())
-		return
-		//http.Error(res, fmt.Sprintf("Can't write reponse: %v", err), http.StatusBadRequest)
-	} else {
-		common.ResMsg(res, 200, "ok!")
+		http.Error(res, fmt.Sprintf("Can't write reponse: %v", err), http.StatusBadRequest)
+		// return
+		// http.Error(res, fmt.Sprintf("Can't write reponse: %v", err), http.StatusBadRequest)
 	}
 }

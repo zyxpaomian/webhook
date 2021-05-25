@@ -23,8 +23,8 @@ func main() {
 	var certFile string
 	var keyFile string
 	flag.IntVar(&port, "port", 443, "Webhook server port.")
-	flag.StringVar(&certFile, "tlsCertFile", "./certs/server.pem", "File containing the x509 Certificate for HTTPS.")
-	flag.StringVar(&keyFile, "tlsKeyFile", "./certs/server-key.pem", "File containing the x509 private key to --tlsCertFile.")
+	flag.StringVar(&certFile, "tlsCertFile", "/certs/tls.crt", "File containing the x509 Certificate for HTTPS.")
+	flag.StringVar(&keyFile, "tlsKeyFile", "/certs/tls.key", "File containing the x509 private key to --tlsCertFile.")
 	flag.Parse()
 
 
@@ -45,7 +45,8 @@ func main() {
 		WriteTimeout: 15 * time.Hour,
 		ReadTimeout:  15 * time.Hour,
 	}
-	go srv.ListenAndServe()
+	go srv.ListenAndServeTLS("", "")
+	//go srv.ListenAndServe()
 
 	// 等待
 	select {}

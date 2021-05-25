@@ -9,7 +9,10 @@ COPY go.sum go.sum
 
 # Copy the go source
 COPY main.go main.go
-COPY server/ server/
+COPY certs/ certs/
+COPY common/ common/
+COPY controller/ controller/
+COPY http/ http/
 
 # Build
 ENV CGO_ENABLED=0
