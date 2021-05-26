@@ -2,7 +2,7 @@ package controller
 
 import (
 	"encoding/json"
-
+        "fmt"
 	admissionv1 "k8s.io/api/admission/v1"
 
 	//corev1 "k8s.io/api/core/v1"
@@ -40,6 +40,9 @@ func Validate(ar *admissionv1.AdmissionReview) *admissionv1.AdmissionResponse {
 	// 处理真正的业务逻辑
 	klog.Infof("pod 信息: %v",&dep.ObjectMeta)
 	klog.Infof("pod2 信息: %v",*dep.Spec.Replicas)
+	klog.Infof("pod3 信息: %T",*dep.Spec.Replicas)
+	replicas := fmt.Sprintf("%d", *dep.Spec.Replicas)
+	klog.Infof("pod4 信息: %d", replicas)
 
 	// 返回具体的admissionresponse
 	return &admissionv1.AdmissionResponse{
