@@ -2,12 +2,15 @@ package controller
 
 import (
 	"encoding/json"
+
 	admissionv1 "k8s.io/api/admission/v1"
+
 	//corev1 "k8s.io/api/core/v1"
+	"net/http"
+
 	appsv1 "k8s.io/api/apps/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/klog"
-	"net/http"
 )
 
 func Validate(ar *admissionv1.AdmissionReview) *admissionv1.AdmissionResponse {
@@ -18,7 +21,7 @@ func Validate(ar *admissionv1.AdmissionReview) *admissionv1.AdmissionResponse {
 		message = ""
 	)
 
-	klog.Infof("[webhook] AdmissionReview for Kind=%s, Namespace=%s Name=%s UID=%s", req.Kind.Kind, req.Namespace, req.Name, req.UID)
+	// klog.Infof("[webhook] AdmissionReview for Kind=%s, Namespace=%s Name=%s UID=%s", req.Kind.Kind, req.Namespace, req.Name, req.UID)
 
 	var dep appsv1.Deployment
 	if err := json.Unmarshal(req.Object.Raw, &dep); err != nil {
@@ -36,6 +39,7 @@ func Validate(ar *admissionv1.AdmissionReview) *admissionv1.AdmissionResponse {
 
 	// 处理真正的业务逻辑
 	klog.Infof("[webhook] pod 相关信息: %v", dep)
+	klog.Infof("[webhook] deployment 副本数量为 %v", dep.spec.replicas)
 
 	// 返回具体的admissionresponse
 	return &admissionv1.AdmissionResponse{
