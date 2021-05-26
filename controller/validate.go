@@ -2,12 +2,9 @@ package controller
 
 import (
 	"encoding/json"
-        "fmt"
 	admissionv1 "k8s.io/api/admission/v1"
-
 	//corev1 "k8s.io/api/core/v1"
 	"net/http"
-
 	appsv1 "k8s.io/api/apps/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/klog"
@@ -38,11 +35,19 @@ func Validate(ar *admissionv1.AdmissionReview) *admissionv1.AdmissionResponse {
 	}
 
 	// 处理真正的业务逻辑
-	klog.Infof("pod 信息: %v",&dep.ObjectMeta)
+	replicas := *dep.Spec.Replicas
+	if replicas < 3 {
+		klog.Infof("[webhook] deployment不满足最低副本数量，无法创建")
+		allowed = false
+		code = http.StatusForbidden
+		message = "need 3 replicas at least, create deployment failed"
+	}
+
+	/*klog.Infof("pod 信息: %v",&dep.ObjectMeta)
 	klog.Infof("pod2 信息: %v",*dep.Spec.Replicas)
 	klog.Infof("pod3 信息: %T",*dep.Spec.Replicas)
 	replicas := fmt.Sprintf("%d", *dep.Spec.Replicas)
-	klog.Infof("pod4 信息: %d", replicas)
+	klog.Infof("pod4 信息: %d", replicas)*/
 
 	// 返回具体的admissionresponse
 	return &admissionv1.AdmissionResponse{
