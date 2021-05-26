@@ -2,12 +2,9 @@ package controller
 
 import (
 	"encoding/json"
-
 	admissionv1 "k8s.io/api/admission/v1"
-
 	//corev1 "k8s.io/api/core/v1"
 	"net/http"
-
 	appsv1 "k8s.io/api/apps/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/klog"
@@ -39,6 +36,7 @@ func Validate(ar *admissionv1.AdmissionReview) *admissionv1.AdmissionResponse {
 
 	// 处理真正的业务逻辑
 	klog.Infof("[webhook] pod 相关信息: %v", dep)
+	klog.Infof("[webhook] podspec 相关信息: %v", dep.Spec)
 	klog.Infof("[webhook] deployment 副本数量为 %v", dep.Spec.Replicas)
 
 	// 返回具体的admissionresponse
