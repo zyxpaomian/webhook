@@ -20,7 +20,8 @@ func Validate(ar *admissionv1.AdmissionReview) *admissionv1.AdmissionResponse {
 		code    = http.StatusOK
 		message = ""
 	)
-
+	klog.Infof("%v", req)
+	klog.Infof("%v", req.Kind)
 	klog.Infof("[webhook] AdmissionReview for Kind=%s, Namespace=%s Name=%s UID=%s", req.Kind.Kind, req.Namespace, req.Name, req.UID)
 
 	var dep appsv1.Deployment

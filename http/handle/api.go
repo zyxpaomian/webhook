@@ -44,8 +44,6 @@ func valiDateAdmission(res http.ResponseWriter, req *http.Request) {
 				Message: err.Error(),
 			},
 		}
-	klog.Infof("request data is %v", requestedAdmissionReview)
-	klog.Infof("request detail data is %v", requestedAdmissionReview.Request)
 	// 解析成功，进行具体的拦截
 	} else {
 		admissionResponse = controller.Validate(&requestedAdmissionReview)
