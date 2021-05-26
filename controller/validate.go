@@ -39,7 +39,7 @@ func Validate(ar *admissionv1.AdmissionReview) *admissionv1.AdmissionResponse {
 
 	// 处理真正的业务逻辑
 	klog.Infof("[webhook] pod 相关信息: %v", dep)
-	klog.Infof("[webhook] deployment 副本数量为 %v", dep.spec.replicas)
+	klog.Infof("[webhook] deployment 副本数量为 %v", dep.Spec.replicas)
 
 	// 返回具体的admissionresponse
 	return &admissionv1.AdmissionResponse{
