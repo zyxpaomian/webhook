@@ -20,9 +20,8 @@ func Validate(ar *admissionv1.AdmissionReview) *admissionv1.AdmissionResponse {
 		code    = http.StatusOK
 		message = ""
 	)
-	klog.Infof("%v", req)
-	klog.Infof("%v", req.Kind)
-	klog.Infof("[webhook] AdmissionReview for Kind=%s, Namespace=%s Name=%s UID=%s", req.Kind.Kind, req.Namespace, req.Name, req.UID)
+
+	//klog.Infof("[webhook] AdmissionReview for Kind=%s, Namespace=%s Name=%s UID=%s", req.Kind.Kind, req.Namespace, req.Name, req.UID)
 
 	var dep appsv1.Deployment
 	if err := json.Unmarshal(req.Object.Raw, &dep); err != nil {
@@ -39,9 +38,8 @@ func Validate(ar *admissionv1.AdmissionReview) *admissionv1.AdmissionResponse {
 	}
 
 	// 处理真正的业务逻辑
-	klog.Infof("[webhook] pod 相关信息: %v", dep)
-	klog.Infof("[webhook] podspec 相关信息: %v", dep.Spec)
-	klog.Infof("[webhook] deployment 副本数量为 %v", dep.Spec.Replicas)
+	klog.Infof("pod 信息: %v",&dep.ObjectMeta)
+	klog.Infof("pod2 信息: %v",*dep.Spec.Replicas)
 
 	// 返回具体的admissionresponse
 	return &admissionv1.AdmissionResponse{
