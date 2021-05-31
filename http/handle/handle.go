@@ -12,5 +12,7 @@ func InitHandle(r *http.WWWMux) {
 func initAPIMapping(r *http.WWWMux) {
 	// 用户认证
 	r.RegistURLMapping("/v1/api/validate", "POST", valiDateAdmission)	
+	// 拦截修改
+	r.RegistURLMapping("/v1/api/mutate", "POST", mutateAdmission)
 }
 
