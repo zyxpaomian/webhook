@@ -1,0 +1,4 @@
+      - name: nginx
+        image: docker.io/nginx:latest
+        ports:
+        - containerPort: 80
