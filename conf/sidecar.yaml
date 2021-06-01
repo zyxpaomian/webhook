@@ -1,4 +1,5 @@
 containers:
-  - name: simple-sidecar
   - name: nginx-sidecar
-    image: docker.io/nginx:latest
+    image: docker.io/redis:latest
+    ports:
+    - containerPort: 8080
