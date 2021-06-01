@@ -13,6 +13,8 @@ COPY certs/ certs/
 COPY common/ common/
 COPY controller/ controller/
 COPY http/ http/
+RUN mkdir -p /config
+COPY conf/sidecar.yaml /config/
 
 # Build
 ENV CGO_ENABLED=0
