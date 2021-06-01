@@ -1,0 +1,4 @@
+containers:
+  - name: simple-sidecar
+  - name: nginx-sidecar
+    image: docker.io/nginx:latest

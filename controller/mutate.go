@@ -25,7 +25,7 @@ type sideConfig struct {
 }
 
 func loadSideCarConfig() (*sideConfig, error) {
-    data, err := ioutil.ReadFile("./conf/sidecar.yaml")
+    data, err := ioutil.ReadFile("/opt/code/webhook/sidecar.yaml")
     if err != nil {
         return nil, err
     }
